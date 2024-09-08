@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-beta1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
+    <script src="https://kit.fontawesome.com/4aed11ef63.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="jquery.js"></script>
+    <script src="jquery.qrcode.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <title>Student Attendance</title>
+  </head>
+  <body class="vw-100 vh-100 align-items-center justify-content-center">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #d9a7c7; 
+            background: -webkit-linear-gradient(to right, #fffcdc, #d9a7c7); 
+            background: linear-gradient(to right, #fffcdc, #d9a7c7); 
+        }
+        .container{
+            background: #ffffff;
+            box-shadow: 0px 0px 4px #888;
+            border-radius: 10px;
+        }
+        .first .list-group-item, .second .list-group-item{
+            border: 0px;
+        }
+        .card{
+            z-index: 2;
+            position: absolute;
+            left: 35%;
+            top: 2.5%;
+            box-shadow: 0px 0px 6px #2222224a;
+        }
+        .cut{
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            color: #000;
+            background-color: #ffffff;
+            cursor: pointer;
+        }
+    </style>
+    <div class="card p-4 d-none" style="max-width: 500px; width: 100%;" id="card">
+        <a id="cut" class="btn-sm btn-warning cut"><i class="fa-solid fa-xmark"></i></a>
+        <h2 class="text-center mb-4 text-dark">Student Attendance Form</h2>
+        <form action="#" id="studentForm">
+            <div class="form-group mb-2">
+                <label for="studentName" class="mb-2">Student Name</label>
+                <input type="text" id="studentName" class="form-control" placeholder="Enter Student Name" required>
+            </div>
+            <div class="form-group my-2">
+                <label for="rollNumber" class="mb-2">Roll Number</label>
+                <input type="number" id="rollNumber" class="form-control" placeholder="Enter Roll Number" required>
+            </div>
+            <div class="form-group my-2">
+                <label for="attendance" class="mb-2">Attendance</label>
+                <!-- <input type="text" id="attendance" class="form-control" placeholder="Present/Absent" required> -->
+                 <select class="form-control" name="Present/Absent" id="attendance" required>
+                    <option>Present</option>
+                    <option>Absent</option>
+                 </select>
+            </div>
+            <div class="form-group my-2">
+                <label for="date" class="mb-2">Date</label>
+                <input type="date" id="date" class="form-control" required>
+            </div>
+            <div class="form-group my-2">
+                <label for="time" class="mb-2">Time</label>
+                <input type="time" id="time" class="form-control" required>
+            </div>
+            <div class="form-group my-2">
+                <label for="class" class="mb-2">Class</label>
+                <input type="text" id="class" class="form-control" placeholder="Enter Class" required>
+            </div>
+            <div class="form-group my-2">
+                <label for="leave" class="mb-2">Leave</label>
+                <select name="" id="leave" class="form-control">
+                    <option value="">Yes</option>
+                    <option value="">No</option>
+                </select>
+                </div>
+            <button type="submit" id="submit" class="btn btn-primary w-100">Submit Attendance</button>
+        </form>
+    </div>
+    <div class="container m-auto">
+        <nav class="navbar d-flex justify-content-between">
+            <h3 class="m-3" >Student Attendance Portal</h3>
+            <ul class="list-unstyled list-group list-group-horizontal">
+                <div class="search btn-group my-2">
+                    <input type="search" class="form-control" placeholder="Search Name">
+                    <button class="btn btn-primary"><i class="fa-solid fa-magnifying-glass"></i></button>
+                </div>
+            </ul>
+        </nav>
+        <div class="row" id="dataprint">            
+            <div class="col-12">
+                <table class="table table-bordered" >
+                    <thead class="">
+                        <tr class="">
+                            <th class="">
+                                <h5>Sa #</h5>
+                            </th>
+                            <th class="">
+                                <h5>Roll No</h5>
+                            </th>
+                            <th class="">
+                                <h5>Student Name</h5>
+                            </th>
+                            <th class="">
+                                <h5>Class</h5>
+                            </th>
+                            <th class="">
+                                <h5>Time</h5>
+                            </th>
+                            <th class="">
+                                <h5>Status</h5>
+                            </th>
+                            <th class="">
+                                <h5>Attendance</h5>
+                            </th>
+                            <th class="">
+                                <h5>Leave</h5>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentList">
+                        <!-- New Row will be here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="col-12 ">
+                <a type="button" class="add-btn m-auto text-decoration-none" href="" id="add-list">
+                  <span class="button__text">Student</span>
+                  <span class="button__icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" height="24" fill="none" class="svg"><line y2="19" y1="5" x2="12" x1="12"></line><line y2="12" y1="12" x2="19" x1="5"></line></svg></span>
+                </a>
+            </div>
+            <div class="col-12">
+                <ul class="list-unstyled d-flex justify-content-around">
+                    <li><small class="text-primary">Total Student: <strong id="totalStudent">0</strong></small></li>
+                    <li><small class="text-success">Total Present: <strong id="present">0</strong></small></li>
+                    <li><small class="text-danger">Total Absent: <strong id="absent">0</strong></small></li>
+                    <li><small class="text-warning">Total Leave: <strong id="leave">0</strong></small></li>
+                </ul>
+               
+            </div>
+        </div>
+        <button class="print-btn position" id="print">
+            <span class="printer-wrapper">
+              <span class="printer-container">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 92 75">
+                  <path
+                    stroke-width="5"
+                    stroke="black"
+                    d="M12 37.5H80C85.2467 37.5 89.5 41.7533 89.5 47V69C89.5 70.933 87.933 72.5 86 72.5H6C4.067 72.5 2.5 70.933 2.5 69V47C2.5 41.7533 6.75329 37.5 12 37.5Z"
+                  ></path>
+                  <mask fill="white" id="path-2-inside-1_30_7">
+                    <path
+                      d="M12 12C12 5.37258 17.3726 0 24 0H57C70.2548 0 81 10.7452 81 24V29H12V12Z"
+                    ></path>
+                  </mask>
+                  <path
+                    mask="url(#path-2-inside-1_30_7)"
+                    fill="black"
+                    d="M7 12C7 2.61116 14.6112 -5 24 -5H57C73.0163 -5 86 7.98374 86 24H76C76 13.5066 67.4934 5 57 5H24C20.134 5 17 8.13401 17 12H7ZM81 29H12H81ZM7 29V12C7 2.61116 14.6112 -5 24 -5V5C20.134 5 17 8.13401 17 12V29H7ZM57 -5C73.0163 -5 86 7.98374 86 24V29H76V24C76 13.5066 67.4934 5 57 5V-5Z"
+                  ></path>
+                  <circle fill="black" r="3" cy="49" cx="78"></circle>
+                </svg>
+              </span>
+          
+              <span class="printer-page-wrapper">
+                <span class="printer-page"></span>
+              </span>
+            </span>
+            Print
+          </button>
+    </div>
+
+    <script src="printThis.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-beta1/js/bootstrap.bundle.min.js"></script>
+     <script src="java.js"></script>
+  </body>
+</html>
